@@ -9,6 +9,8 @@ from pathlib import Path
 class TestSetup:
     """Result of detecting how a repo runs its tests."""
 
+    __test__ = False  # tell pytest not to collect this class
+
     runner: str                    # runner the harness will use
     command: list[str]             # command to execute
     source: str                    # file that informed the decision
