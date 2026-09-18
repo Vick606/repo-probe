@@ -109,28 +109,22 @@ Report (`reports/8.1.7.json`):
 ## Architecture
 
 ```mermaid
-flowchart TD
-    User([User]) -->|python -m repo_probe URL REF| CLI[CLI Orchestrator<br/><code>__main__.py</code>]
+flowchart LR
+    User([User]) --> CLI[CLI Orchestrator<br/>__main__.py]
 
-    CLI -.->|1. clone| Cloner[Cloner<br/><code>cloner.py</code>]
-    CLI -.->|2. detect| Detector[Detector<br/><code>detector.py</code>]
-    CLI -.->|3. build| Builder[Builder<br/><code>builder.py</code>]
-    CLI -.->|4. run| Runner[Runner<br/><code>runner.py</code>]
-    CLI -.->|5. report| Reporter[Reporter<br/><code>reporter.py</code>]
-
-    Cloner -->|workspace| Detector
-    Detector -->|TestSetup| Builder
-    Builder -->|image tag| Runner
-    Runner -->|TestRun| Reporter
+    CLI --> Cloner[Cloner<br/>cloner.py]
+    Cloner -->|workspace| Detector[Detector<br/>detector.py]
+    Detector -->|TestSetup| Builder[Builder<br/>builder.py]
+    Builder -->|image tag| Runner[Runner<br/>runner.py]
+    Runner -->|TestRun| Reporter[Reporter<br/>reporter.py]
+    Reporter --> JSON[(JSON Report<br/>reports/ref.json)]
 
     Cloner -.->|git clone| Git[(Git Service)]
     Builder -.->|docker build| Docker[(Docker Engine)]
     Runner -.->|docker run| Docker
-
-    Reporter -->|writes| JSON[(JSON Report<br/><code>reports/&lt;ref&gt;.json</code>)]
 ```
 
-Each stage is a separate module with its own unit tests. The CLI only orchestrates.
+The CLI orchestrates each stage in order. Every stage is a separate module with its own unit tests; the CLI only wires them together and handles argument parsing.
 
 <br>
 
