@@ -8,8 +8,11 @@ from pathlib import Path
 from repo_probe.detector import TestSetup, detect_test_setup
 
 
+# Runner name -> pip install spec. Pinning pytest<9 because many real repos
+# (e.g. click 8.1.7) predate pytest 9's stricter deprecation handling and
+# fail during collection under the newer version.
 _RUNNER_PACKAGES: dict[str, str | None] = {
-    "pytest": "pytest",
+    "pytest": "pytest<9",
     "unittest": None,  # stdlib, nothing to install
     "tox": "tox",
     "nox": "nox",
@@ -33,7 +36,7 @@ def render_dockerfile(setup: TestSetup, python_version: str = "3.12") -> str:
 
     pkg = _RUNNER_PACKAGES.get(setup.runner)
     if pkg:
-        lines.append(f"RUN pip install --no-cache-dir {pkg}")
+        lines.append(f"RUN pip install --no-cache-dir '{pkg}'")
 
     lines.append("")
     lines.append(f"CMD {json.dumps(setup.command)}")

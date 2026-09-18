@@ -10,7 +10,7 @@ def test_pytest_dockerfile_contains_pytest_install() -> None:
     content = render_dockerfile(setup)
 
     assert "FROM python:3.12-slim" in content
-    assert "pip install --no-cache-dir pytest" in content
+    assert "pip install --no-cache-dir 'pytest<9'" in content
     assert 'CMD ["pytest", "-v"]' in content
 
 
@@ -19,7 +19,7 @@ def test_tox_dockerfile_installs_tox() -> None:
 
     content = render_dockerfile(setup)
 
-    assert "pip install --no-cache-dir tox" in content
+    assert "pip install --no-cache-dir 'tox'" in content
     assert 'CMD ["tox"]' in content
 
 
