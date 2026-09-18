@@ -1,0 +1,5 @@
+# Ignore generated reports from language stats
+reports/** linguist-generated
+
+# Ensure Python is detected properly
+*.py linguist-language=Python
